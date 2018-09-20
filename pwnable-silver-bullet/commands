@@ -1,0 +1,29 @@
+file silver_bullet
+b power_up
+b *power_up+105
+b *power_up+110
+b *power_up+135
+b *power_up+147
+b *power_up+176
+b *power_up+190
+
+commands 1-7
+x/x $ebp+8
+x/s 0xffffd2a4
+x/d 0xffffd2a4+0x30
+end
+
+run
+
+; Breaking before and after read_input, strncat, strlen, ???, ???
+; x/x $ebp+8			prints the address pointed by $ebp+8 (function parameter)
+; x/s 0xffffd2a4		prints a null terminated string pointed by 0xffffd2a4
+; x/d 0xffffd2a4+0x30	prints a decimal value 0x30 bytes from 0xffffd2a4
+; b *0x080487b2			break at the interesting part of the beat function
+; b *0x08048954			break at the beginning of main
+; b *power_up+163		break at the calculation of the new length
+; x/x 0xffffd2dc		print the return address from main (originally 0xf7dec9a1)
+; x/x 0xffffd2d4		print the bullet length
+; x/s 0xffffd2a4		print the bullet desc
+; x/s 0xffffd2a0		print the wolf's name
+; x/x 0xffffd29c		print the wolf's HP
