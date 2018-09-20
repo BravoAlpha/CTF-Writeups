@@ -15,10 +15,7 @@ push    eax
 mov     [ebp-0x3C], 7FFFFFFFh
 ```
 
-I assume that's the wolf's HP since it matches the value we get
-when we try to kill the wolf (2147483647).
-
-This is the maximum positive value for a 32-bit signed integer.
+I assume that's the wolf's HP since it matches the value we get when we try to kill the wolf (2147483647). This is the maximum positive value for a 32-bit signed integer.
 
 Idea: If the input function overflows, we might be able to override
 the Wolf's HP with our own value.
@@ -183,12 +180,12 @@ PIE       : disabled
 RELRO     : FULL
 
 [FULL RELRO](https://ctf101.org/binary-exploitation/relocation-read-only/)
-Full RELRO makes the entire GOT read-only which removes the ability to perform
+makes the entire GOT read-only which removes the ability to perform
 a "GOT overwrite" attack, where the GOT address of a function is overwritten
 with the location of another function or a ROP gadget an attacker wants to run.
 
 [NX](https://ctf101.org/binary-exploitation/no-execute/)
-The No eXecute or the NX bit (also known as Data Execution Prevention or DEP)
+(also known as Data Execution Prevention or DEP)
 marks certain areas of the program as not executable, meaning that stored input
 or data cannot be executed as code. This is significant because it prevents
 attackers from being able to jump to custom shellcode that they've stored on
