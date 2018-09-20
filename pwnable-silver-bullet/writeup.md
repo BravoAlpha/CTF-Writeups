@@ -39,13 +39,8 @@ push    eax
 call    read_input
 ```
 
-read_input uses the read system call to read upto 48 bytes from
-the user (30h) so our buffer won't overflow to the wolf's HP.
-In case the input ends with '\n', it replaces it with NULL.
-
-create_input then calls strlen to get the length of the input
+read_input uses the read system call to read upto 48 bytes from the user (30h) so our buffer won't overflow to the wolf's HP. In case the input ends with '\n', it replaces it with NULL. create_input then calls strlen to get the length of the input and stores the result in:
 ```assembly
-and stores the result in:
 mov     [eax+30h], edx
 ```
 
